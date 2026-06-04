@@ -31,7 +31,7 @@
   @endguest
 
   @auth
-  <span>Привіт, *Ім'я</span>
+  <span>Привіт, {{auth()->user()->username}}</span>
   @endauth
 
   <span>Обране❤️</span>
