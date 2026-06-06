@@ -13,19 +13,24 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            
             $table->foreignId('user_id')
-          ->constrained()
-          ->cascadeOnDelete();
-
+                  ->constrained()
+                  ->cascadeOnDelete();
+    
             $table->foreignId('product_id')
-                ->constrained()
-                ->cascadeOnDelete();
-
+                  ->constrained()
+                  ->cascadeOnDelete();
+    
             $table->tinyInteger('rating'); // 1-5
-
             $table->text('comment')->nullable();
-                    $table->timestamps();
-                });
+            $table->boolean('is_visible')->default(true);
+            
+            $table->timestamps();
+    
+            // Опціонально (захист від повторних відгуків на той самий товар):
+            $table->unique(['user_id', 'product_id']);
+        });
     }
 
     /**

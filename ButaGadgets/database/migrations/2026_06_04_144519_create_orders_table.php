@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')
+            ->nullable() // Дозволяємо порожнє значення
             ->constrained()
-            ->cascadeOnDelete();
+            ->nullOnDelete(); // При видаленні користувача ставимо null
   
             $table->decimal('total_price', 10, 2);
-        
+            $table->string('shipping_address');
+            $table->string('phone');
+            $table->string('recipient_name');
             $table->string('status')->default('pending');
             
             $table->timestamps();
