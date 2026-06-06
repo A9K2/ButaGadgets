@@ -39,3 +39,16 @@ Route::post('/login', [AuthController::class, 'login']);
 
 //Вихід
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::resource('products', AdminProductController::class);
+
+        Route::resource('comments', AdminReviewController::class);
+
+        Route::resource('users', AdminUserController::class);
+
+    });
