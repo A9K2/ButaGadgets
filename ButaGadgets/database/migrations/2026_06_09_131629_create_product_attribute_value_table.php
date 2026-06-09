@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('processors', function (Blueprint $table) {
+        Schema::create('product_attribute_value', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('attribute_value_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('processors');
+        Schema::dropIfExists('product_attribute_value');
     }
 };
