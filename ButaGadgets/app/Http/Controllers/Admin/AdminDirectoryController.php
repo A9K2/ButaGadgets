@@ -13,7 +13,7 @@ class AdminDirectoryController extends Controller
     // Головна сторінка керування довідниками
     public function index()
     {
-        $brands = Brand::latest()->get();
+        $brands = Brand::with('categories')->latest()->get();
         $categories = Category::latest()->get();
         $subcategories = Subcategory::with('category')->latest()->get();
 
@@ -23,11 +23,17 @@ class AdminDirectoryController extends Controller
     public function storeBrand(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|unique:brands,name|max:255',
+            'name'           => 'required|string|unique:brands,name|max:255',
+            'category_ids'   => 'required|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
-        Brand::create($validated);
+
+        $brand = Brand::create(['name' => $validated['name']]);
+        $brand->categories()->sync($validated['category_ids']);
+
         return redirect()->back()->with('success', 'Бренд успішно додано!');
     }
+
 
     public function storeCategory(Request $request)
     {
@@ -66,26 +72,24 @@ class AdminDirectoryController extends Controller
     public function destroyCategory($id)
     {
         $category = Category::findOrFail($id);
-
-        // Перевірка: чи є підкатегорії або товари в цій категорії
+    
         if ($category->subcategories()->exists() || $category->products()->exists()) {
-            return redirect()->back()->with('error', 'Не можна видалити категорію, оскільки вона містить товари або підкатегорії!');
+            return redirect()->route('admin.directories.index')
+                ->with('error', 'Не можна видалити категорію, оскільки вона містить товари або підкатегорії!');
         }
-
+    
         $category->delete();
-        return redirect()->back()->with('success', 'Категорію успішно видалено.');
+        return redirect()->route('admin.directories.index')
+            ->with('success', 'Категорію успішно видалено.');
     }
-
+    
     public function destroySubcategory($id)
     {
         $subcategory = Subcategory::findOrFail($id);
-
-        // Перевірка: чи є товари в цій підкатегорії
-        if ($subcategory->products()->exists()) {
-            return redirect()->back()->with('error', 'Не можна видалити підкатегорію, до якої прив\'язані товари!');
-        }
-
+    
+        // якщо є перевірка на товари — теж замініть back() на route()
         $subcategory->delete();
-        return redirect()->back()->with('success', 'Підкатегорію успішно видалено.');
+        return redirect()->route('admin.directories.index')
+            ->with('success', 'Підкатегорію успішно видалено.');
     }
 }

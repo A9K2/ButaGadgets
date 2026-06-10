@@ -23,70 +23,81 @@ class AdminProductController extends Controller
 
     // У AdminProductController.php
     public function create(Request $request)
-{
-    $categories = Category::all();
-    $category = null;
+    {
+        $categories    = Category::all();
+        $subcategories = Subcategory::all();
+        $category      = null;
+        $brands        = collect(); // порожня колекція за замовчуванням
 
-    if ($request->has('category_id')) {
-        // Додаємо get() або first(), щоб отримати об'єкт
-        $category = Category::with('attributes.values')->find($request->category_id);
+        if ($request->has('category_id')) {
+            $category      = Category::with('attributes.values', 'brands')->find($request->category_id);
+            $brands        = $category ? $category->brands : collect();
+            $subcategories = Subcategory::where('category_id', $request->category_id)->get();
+        }
+
+        return view('admin.products.create', compact('categories', 'category', 'brands', 'subcategories'));
     }
 
-    return view('admin.products.create', compact('categories', 'category'));
-}
-
     public function store(Request $request)
-    {
-        // ... ваш код валідації та завантаження фото ...
+{
+    $validated = $request->validate([
+        'name'           => 'required|string',
+        'category_id'    => 'required|exists:categories,id',
+        'brand_id'       => 'required|exists:brands,id',
+        'subcategory_id' => 'required|exists:subcategories,id',
+        'price'          => 'required|numeric|min:0',
+        'attributes'     => 'array'
+    ]);
 
-        DB::transaction(function () use ($request, $validatedProduct) {
-            $product = Product::create($validatedProduct);
+    DB::transaction(function () use ($request, $validated) {
+        $product = Product::create($validated);
 
-            // Припустимо, у формі приходять атрибути у масиві 'attributes'
-            // наприклад: attributes => [1 => 5, 2 => 10] (де 1 — ID атрибута, 5 — ID значення)
-            if ($request->has('attributes')) {
-                foreach ($request->attributes as $attribute_id => $value_id) {
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('products', 'public');
+                $product->images()->create(['image_path' => $path]);
+            }
+        }
+
+        if ($request->has('attributes')) {
+            foreach ($request->input('attributes') as $attribute_id => $value_id) {
+                if (!empty($value_id)) {
                     ProductAttributeValue::create([
-                        'product_id' => $product->id,
-                        'attribute_id' => $attribute_id,
-                        'value_id' => $value_id, // Або просто 'value' => $value_id
+                        'product_id'         => $product->id,
+                        'attribute_id'       => (int) $attribute_id,
+                        'attribute_value_id' => (int) $value_id,
                     ]);
                 }
             }
-        });
+        }
+    });
 
-        return redirect()->route('admin.products.index')->with('success', 'Товар успішно додано!');
-    }
+    return redirect()->route('admin.products.index')->with('success', 'Товар додано!');
+}
 
     /**
      * МЕТОД ЕDIT: Відображення форми редагування
      */
-    public function edit($id)
-    {
-        // Завантажуємо продукт
-        $product = Product::findOrFail($id);
+    // У AdminProductController.php
+    public function edit(Request $request, $id)
+{
+    $product       = Product::with('attributeValues')->findOrFail($id);
+    $categories    = Category::all();
+    $categoryId    = $request->get('category_id', $product->category_id);
+    $category      = Category::with('attributes.values', 'brands')->find($categoryId);
+    $brands        = $category ? $category->brands : Brand::all();
+    $subcategories = Subcategory::where('category_id', $categoryId)->get();
 
-        // Завантажуємо всі необхідні довідники
-        $categories = Category::all();
-        $brands = Brand::all();
-        $subcategories = Subcategory::all();
-
-        $processors = DB::table('processors')->get();
-        $rams = DB::table('rams')->get();
-        $storages = DB::table('storages')->get();
-        $batteries = DB::table('batteries')->get();
-        $colors = DB::table('colors')->get();
-        $screen_types = DB::table('screen_types')->get();
-        $screen_sizes = DB::table('screen_sizes')->get();
-        $video_cards = DB::table('video_cards')->get();
-        $operating_systems = DB::table('operating_systems')->get();
-
-        return view('admin.products.edit', compact(
-            'product', 'categories', 'brands', 'subcategories',
-            'processors', 'rams', 'storages', 'batteries', 
-            'colors', 'screen_types', 'screen_sizes', 'video_cards', 'operating_systems'
-        ));
+    // ✅ Будуємо масив [attribute_id => value_id] з поточних значень продукту
+    $currentAttributes = [];
+    foreach ($product->attributeValues as $av) {
+        $currentAttributes[$av->attribute_id] = $av->attribute_value_id;
     }
+
+    return view('admin.products.edit', compact(
+        'product', 'categories', 'brands', 'subcategories', 'category', 'currentAttributes'
+    ));
+}
 
     /**
      * МЕТОД UPDATE: Оновлення даних у базі даних
@@ -95,63 +106,37 @@ class AdminProductController extends Controller
 {
     $product = Product::findOrFail($id);
 
-    $validatedProduct = $request->validate([
-        'name' => 'required|string|max:255',
-        'brand_id' => 'required|exists:brands,id',
-        'category_id' => 'required|exists:categories,id',
+    $validated = $request->validate([
+        'name'           => 'required|string|max:255',
+        'brand_id'       => 'required|exists:brands,id',
+        'category_id'    => 'required|exists:categories,id',
         'subcategory_id' => 'nullable|exists:subcategories,id',
-        'price' => 'required|numeric|min:0',
-        'old_price' => 'nullable|numeric|min:0',
-        'quantity' => 'required|integer|min:0',
-        'description' => 'nullable|string',
+        'price'          => 'required|numeric|min:0',
+        'attributes'     => 'array',
     ]);
 
-    $validatedProduct['is_popular'] = $request->has('is_popular');
-    $validatedProduct['is_action'] = $request->has('is_action');
+    $product->update($validated);
 
-    if ($request->hasFile('image')) {
-        if ($product->image && file_exists(public_path($product->image))) {
-            @unlink(public_path($product->image));
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('products', 'public');
+            $product->images()->create(['image_path' => $path]);
         }
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('images/products'), $imageName);
-        $validatedProduct['image'] = 'images/products/' . $imageName;
     }
 
-    DB::transaction(function () use ($request, $product, $validatedProduct) {
-        $product->update($validatedProduct);
+    if ($request->has('attributes')) {
+        ProductAttributeValue::where('product_id', $product->id)->delete();
 
-        if ($request->category_id == 1) {
-            Phone::updateOrCreate(
-                ['product_id' => $product->id],
-                [
-                    'processor_id' => $request->processor_id,
-                    'ram_id' => $request->ram_id,
-                    'storage_id' => $request->storage_id,
-                    'battery_id' => $request->battery_id,
-                    'color_id' => $request->color_id,
-                    'screen_type_id' => $request->screen_type_id,
-                    'operating_system_id' => $request->operating_system_id,
-                ]
-            );
-            Laptop::where('product_id', $product->id)->delete();
-        } elseif ($request->category_id == 2) {
-            Laptop::updateOrCreate(
-                ['product_id' => $product->id],
-                [
-                    'processor_id' => $request->processor_id,
-                    'video_card_id' => $request->video_card_id,
-                    'ram_id' => $request->ram_id,
-                    'storage_id' => $request->storage_id,
-                    'screen_size_id' => $request->screen_size_id,
-                    'screen_type_id' => $request->screen_type_id,
-                    'operating_system_id' => $request->operating_system_id,
-                    'color_id' => $request->color_id,
-                ]
-            );
-            Phone::where('product_id', $product->id)->delete();
+        foreach ($request->input('attributes') as $attribute_id => $value_id) {
+            if (!empty($value_id)) {
+                ProductAttributeValue::create([
+                    'product_id'         => $product->id,
+                    'attribute_id'       => (int) $attribute_id,
+                    'attribute_value_id' => (int) $value_id,
+                ]);
+            }
         }
-    });
+    }
 
     return redirect()->route('admin.products.index')->with('success', 'Товар оновлено!');
 }

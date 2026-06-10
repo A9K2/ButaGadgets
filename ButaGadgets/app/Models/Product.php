@@ -23,9 +23,11 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function attributeValues(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-{
-    return $this->belongsToMany(AttributeValue::class, 'product_attribute_value')
-                ->withTimestamps();
-}
+    public function attributeValues()
+    {
+        return $this->hasMany(ProductAttributeValue::class);
+    }
+    public function images() {
+        return $this->hasMany(ProductImage::class);
+    }
 }

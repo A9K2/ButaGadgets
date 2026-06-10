@@ -13,33 +13,62 @@
     </div>
 @endif
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm p-3 h-100">
             <h5 class="text-primary mb-3">🏷 Новий бренд</h5>
             <form action="{{ route('admin.directories.brands.store') }}" method="POST" class="mb-3">
                 @csrf
-                <div class="input-group">
+                <div class="mb-2">
                     <input type="text" name="name" class="form-control" placeholder="Назва (напр. Samsung)" required>
-                    <button class="btn btn-primary" type="submit">Додати</button>
                 </div>
+                <div class="mb-2">
+                    <label class="form-label fw-bold">Прив'язати до категорій:</label>
+                    @foreach($categories as $cat)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="category_ids[]" value="{{ $cat->id }}"
+                                   id="cat_{{ $cat->id }}">
+                            <label class="form-check-label" for="cat_{{ $cat->id }}">
+                                {{ $cat->name }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Додати</button>
             </form>
 
             <h6>Існуючі бренди:</h6>
             <ul class="list-group list-group-flush overflow-auto" style="max-height: 400px;">
                 @forelse($brands as $brand)
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <div>
-                            <span>{{ $brand->name }}</span>
-                            <small class="text-muted ms-2">(ID: {{ $brand->id }})</small>
+                    <li class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span>{{ $brand->name }}</span>
+                                <small class="text-muted ms-2">(ID: {{ $brand->id }})</small>
+                                {{-- Показуємо прив'язані категорії --}}
+                                @if($brand->categories->isNotEmpty())
+                                    <small class="text-muted d-block">
+                                        {{ $brand->categories->pluck('name')->join(', ') }}
+                                    </small>
+                                @endif
+                            </div>
+
+                            <form action="{{ route('admin.directories.brands.destroy', $brand->id) }}" method="POST" onsubmit="return confirm('Ви впевнені, що хочете видалити цей бренд?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" title="Видалити">
+                                    &#128465;
+                                </button>
+                            </form>
                         </div>
-                        
-                        <form action="{{ route('admin.directories.brands.destroy', $brand->id) }}" method="POST" onsubmit="return confirm('Ви впевнені, що хочете видалити цей бренд?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" title="Видалити">
-                                &#128465; </button>
-                        </form>
                     </li>
                 @empty
                     <li class="list-group-item text-muted text-center px-0">Брендів немає</li>
@@ -107,7 +136,7 @@
                 @forelse($subcategories as $sub)
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                         <div>
-                            <span>{{ $sub->name }}</span> 
+                            <span>{{ $sub->name }}</span>
                             <small class="text-muted d-block">Категорія: {{ $sub->category?->name ?? 'Видалена' }} (ID: {{ $sub->id }})</small>
                         </div>
 

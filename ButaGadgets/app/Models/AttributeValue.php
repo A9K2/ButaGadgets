@@ -10,15 +10,17 @@ class AttributeValue extends Model
 {
     protected $fillable = ['attribute_id', 'value'];
 
-    // Значення належить конкретному атрибуту
+    // Значення належить атрибуту
     public function attribute(): BelongsTo
     {
         return $this->belongsTo(Attribute::class);
     }
 
-    // Значення можуть належати багатьом товарам
+    // Зв'язок з товарами через таблицю-посередник
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'product_attribute_value');
+        // Вкажіть правильні зовнішні ключі, якщо вони не стандартні
+        return $this->belongsToMany(Product::class, 'product_attribute_value', 'attribute_value_id', 'product_id')
+                    ->withPivot('attribute_id'); // Якщо в таблиці є attribute_id
     }
 }

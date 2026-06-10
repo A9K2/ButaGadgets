@@ -8,7 +8,8 @@
             <p>У базі даних немає жодної категорії.</p>
         @else
             @foreach($categories as $category)
-                <div class="card mb-4">
+                {{-- ✅ Якір для кожної категорії --}}
+                <div class="card mb-4" id="category-{{ $category->id }}">
                     <div class="card-header"><h4>{{ $category->name }}</h4></div>
                     <div class="card-body">
                         
@@ -22,7 +23,8 @@
     
                         <ul class="list-group">
                             @foreach($category->attributes ?? [] as $attribute)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{-- ✅ Якір для кожного атрибуту --}}
+                                <li class="list-group-item d-flex justify-content-between align-items-center" id="attribute-{{ $attribute->id }}">
                                     <div>
                                         <strong>{{ $attribute->name }}</strong>
                                         <small class="text-muted d-block">
@@ -51,4 +53,26 @@
             @endforeach
         @endif
     </div>
+
+{{-- ✅ Збереження позиції скролу --}}
+<script>
+    // Відновлюємо позицію після редиректу
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollTo = sessionStorage.getItem('scrollToAnchor');
+        if (scrollTo) {
+            const el = document.getElementById(scrollTo);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            sessionStorage.removeItem('scrollToAnchor');
+        }
+    });
+
+    // Зберігаємо якір перед відправкою
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+            // Знаходимо найближчий елемент з id
+            const anchor = form.closest('[id]');
+            if (anchor) sessionStorage.setItem('scrollToAnchor', anchor.id);
+        });
+    });
+</script>
 @endsection

@@ -36,9 +36,9 @@ class AdminSpecificationController extends Controller
     {
         $request->validate(['value' => 'required|string|max:255']);
         
-        \App\Models\AttributeValue::create([
+        AttributeValue::create([
             'attribute_id' => $attributeId,
-            'value' => $request->value
+            'value'        => $request->value
         ]);
         
         return back()->with('success', 'Значення додано!');
