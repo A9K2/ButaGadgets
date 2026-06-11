@@ -15,6 +15,11 @@
             <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
         </div>
 
+        <div class="form-group">
+            <label>Кількість на складі</label>
+            <input type="number" name="quantity" class="form-control" value="{{ old('quantity', $product->quantity ?? 0) }}" required>
+        </div>
+
         <label>Назва бренду</label>
         <select name="brand_id" class="form-control" required>
             @foreach($brands as $brand)

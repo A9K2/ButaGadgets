@@ -11,6 +11,11 @@
             <label>Назва товару</label>
             <input type="text" name="name" class="form-control" required>
         </div>
+        
+        <div class="form-group">
+            <label>Кількість на складі</label>
+            <input type="number" name="quantity" class="form-control" value="{{ old('quantity', 0) }}" required>
+        </div>
 
         <label>Назва бренду</label>
         <select name="brand_id" class="form-control" required>

@@ -31,6 +31,11 @@
             <li class="nav-item">
                 <a href="{{ route('admin.specifications.index') }}" class="nav-link {{ Request::is('admin/specifications*') ? 'active' : '' }}">🛠 Конструктор характеристик</a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('admin.users.index') }}" class="nav-link">
+                    <i class="fas fa-users"></i> Користувачі
+                </a>
+            </li>
         </ul>
     </div>
 

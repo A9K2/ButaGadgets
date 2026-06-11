@@ -15,9 +15,16 @@ use Illuminate\Support\Facades\DB;
 
 class AdminProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(10);
+        $query = \App\Models\Product::query();
+
+        // Пошук за назвою
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->paginate(15)->withQueryString();
         return view('admin.products.index', compact('products'));
     }
 
@@ -46,6 +53,7 @@ class AdminProductController extends Controller
         'brand_id'       => 'required|exists:brands,id',
         'subcategory_id' => 'required|exists:subcategories,id',
         'price'          => 'required|numeric|min:0',
+        'quantity' => 'required|integer|min:0',
         'attributes'     => 'array'
     ]);
 
@@ -112,6 +120,7 @@ class AdminProductController extends Controller
         'category_id'    => 'required|exists:categories,id',
         'subcategory_id' => 'nullable|exists:subcategories,id',
         'price'          => 'required|numeric|min:0',
+        'quantity' => 'required|integer|min:0',
         'attributes'     => 'array',
     ]);
 

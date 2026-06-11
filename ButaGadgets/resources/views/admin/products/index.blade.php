@@ -5,7 +5,10 @@
     <h2>Усі товари</h2>
     <a href="{{ route('admin.products.create') }}" class="btn btn-primary">+ Додати товар</a>
 </div>
-
+<form action="{{ route('admin.products.index') }}" method="GET" class="mb-3 d-flex">
+    <input type="text" name="search" class="form-control me-2" placeholder="Пошук товару..." value="{{ request('search') }}">
+    <button type="submit" class="btn btn-primary">Пошук</button>
+</form>
 <div class="card p-3 shadow-sm">
     <table class="table table-hover align-middle">
         <thead class="table-dark">

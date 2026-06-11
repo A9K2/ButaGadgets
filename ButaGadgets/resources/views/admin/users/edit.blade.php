@@ -11,8 +11,13 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label class="form-label">Користувач</label>
-            <input type="text" class="form-control" value="{{ $user->username }} ({{ $user->email }})" disabled>
+            <label class="form-label">Нікнейм</label>
+            <input type="text" name="username" class="form-control" value="{{ old('username', $user->username) }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
         </div>
 
         <div class="mb-4">
@@ -22,6 +27,7 @@
                 <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin (Повний доступ до адмінки)</option>
             </select>
         </div>
+        
 
         <button type="submit" class="btn btn-success">💾 Зберегти налаштування</button>
         <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Назад до списку</a>

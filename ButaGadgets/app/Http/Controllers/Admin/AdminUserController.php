@@ -9,10 +9,15 @@ use App\Models\User;
 class AdminUserController extends Controller
 {
     // Список усіх користувачів
-    public function index()
+    public function index(Request $request)
     {
-        // Пагінація по 15 користувачів на сторінку
-        $users = User::latest()->paginate(15);
+        $users = \App\Models\User::query()
+            ->when($request->search, function ($query, $search) {
+                $query->where('username', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })
+            ->paginate(15) 
+            ->withQueryString(); 
         return view('admin.users.index', compact('users'));
     }
 
@@ -22,13 +27,14 @@ class AdminUserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    // Оновлення даних користувача в БД
+    
     public function update(Request $request, User $user)
     {
+        
         $validated = $request->validate([
             'username' => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email,' . $user->id,
-            'role'     => 'required|in:user,admin', // Дозволяємо лише ролі з вашої міграції
+            'role'     => 'required|in:user,admin',
         ]);
 
         $user->update($validated);

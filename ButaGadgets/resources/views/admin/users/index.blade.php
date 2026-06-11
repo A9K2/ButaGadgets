@@ -5,6 +5,20 @@
     <h2>Керування користувачами</h2>
 </div>
 
+<div class="row mb-3">
+    <div class="col-md-4">
+        <form action="{{ route('admin.users.index') }}" method="GET" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" 
+                   placeholder="Пошук (нік або email)..." 
+                   value="{{ request('search') }}">
+            <button type="submit" class="btn btn-outline-primary">Пошук</button>
+            @if(request('search'))
+                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary ms-1">X</a>
+            @endif
+        </form>
+    </div>
+</div>
+
 <div class="card p-3 shadow-sm">
     <table class="table table-hover align-middle">
         <thead class="table-dark">
