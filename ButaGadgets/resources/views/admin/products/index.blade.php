@@ -44,8 +44,30 @@
         </tbody>
     </table>
 
-    <div class="mt-3">
-        {{ $products->links() }}
+    <div class="mt-3 d-flex justify-content-between align-items-center">
+        <div class="text-muted small">
+            Показано {{ $products->firstItem() }}–{{ $products->lastItem() }} з {{ $products->total() }} товарів
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+            <div class="text-muted small">
+                Показано {{ $products->firstItem() }}–{{ $products->lastItem() }} з {{ $products->total() }} товарів
+            </div>
+            @if($products->hasPages())
+            <ul class="pagination mb-0">
+                <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $products->previousPageUrl() ?? '#' }}">&lsaquo;</a>
+                </li>
+                @foreach(range(1, $products->lastPage()) as $page)
+                    <li class="page-item {{ $page == $products->currentPage() ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $products->url($page) }}">{{ $page }}</a>
+                    </li>
+                @endforeach
+                <li class="page-item {{ !$products->hasMorePages() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $products->nextPageUrl() ?? '#' }}">&rsaquo;</a>
+                </li>
+            </ul>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

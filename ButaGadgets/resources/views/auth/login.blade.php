@@ -29,7 +29,7 @@
 
             {{-- Password --}}
             <div class="mb-6">
-                <label for="password" class="mb-2 block text-xl">Password</label>
+                <label for="password" class="mb-2 block text-xl">Пароль</label>
 
                 <input
                     type="password"
@@ -45,7 +45,7 @@
             </div>
             <div>
                 <input type="checkbox" name="remember" id="remember">
-                <label for="remember">Remember me</label>
+                <label for="remember">Запам'ятати мене </label>
 
                 @error('failed')
                     <p class="error">{{$message}}</p>
@@ -55,7 +55,7 @@
                 type="submit"
                 class="w-full rounded-xl bg-slate-900 py-3 text-xl text-white"
             >
-                Login
+                Війти
             </button>
 
         </form>

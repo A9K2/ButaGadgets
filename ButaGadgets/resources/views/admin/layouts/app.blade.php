@@ -26,7 +26,7 @@
                 <a href="{{ route('admin.directories.index') }}" class="nav-link {{ Request::is('admin/directories*') ? 'active' : '' }}">📂 Довідники (Бренди/Категорії)</a>
             </li>
             <li>
-                <a href="{{ route('admin.comments.index') }}" class="nav-link {{ Request::is('admin/comments*') ? 'active' : '' }}">💬 Відгуки</a>
+                <a href="{{ route('admin.comments.index') }}" class="nav-link {{ Request::is('admin/comments*') ? 'active' : '' }}">💬 Замовлення</a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.specifications.index') }}" class="nav-link {{ Request::is('admin/specifications*') ? 'active' : '' }}">🛠 Конструктор характеристик</a>

@@ -4,36 +4,37 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Review;
+use App\Models\Order;
 
 class AdminReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-       // Завантажуємо відгуки разом із авторами та товарами (економить запити до БД)
-       $reviews = Review::with(['user', 'product'])->latest()->paginate(15);
-       return view('admin.comments.index', compact('reviews'));
+        $search = $request->search ?? '';
+
+        $orders = Order::with(['user'])
+            ->when($search, function($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                  ->orWhere('recipient_name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhereHas('user', fn($u) => $u->where('username', 'like', "%{$search}%"));
+            })
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.comments.index', compact('orders', 'search'));
     }
 
-    
-    public function update(Request $request, Review $comment)
+    public function update(Request $request, Order $comment)
     {
-        $comment->update([
-            'is_visible' => $request->has('is_visible') ? true : false,
-        ]);
-
-        return redirect()->back()->with('success', 'Статус видимості коментаря змінено.');
+        $comment->update(['status' => $request->status]);
+        return redirect()->back()->with('success', 'Статус замовлення змінено.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Review $comment)
+    public function destroy(Order $comment)
     {
+        $comment->items()->delete();
         $comment->delete();
-        return redirect()->route('admin.comments.index')->with('success', 'Коментар видалено.');
+        return redirect()->route('admin.comments.index')->with('success', 'Замовлення видалено.');
     }
 }

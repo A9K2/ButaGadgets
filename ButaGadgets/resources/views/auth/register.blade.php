@@ -12,7 +12,7 @@
 
             {{-- Username --}}
             <div class="mb-6">
-                <label for="username" class="mb-2 block text-xl">Username</label>
+                <label for="username" class="mb-2 block text-xl">Ім'я</label>
 
                 <input
                     type="text"
@@ -46,7 +46,7 @@
 
             {{-- Password --}}
             <div class="mb-6">
-                <label for="password" class="mb-2 block text-xl">Password</label>
+                <label for="password" class="mb-2 block text-xl">Пароль</label>
 
                 <input
                     type="password"
@@ -63,7 +63,7 @@
 
             {{-- Confirm Password --}}
             <div class="mb-8">
-                <label for="password_confirmation" class="mb-2 block text-xl">Confirm Password</label>
+                <label for="password_confirmation" class="mb-2 block text-xl">Підтвердження паролю</label>
 
                 <input
                     type="password"
@@ -82,7 +82,7 @@
                 type="submit"
                 class="w-full rounded-xl bg-slate-900 py-3 text-xl text-white"
             >
-                Register
+                Зареєструватись
             </button>
 
         </form>
