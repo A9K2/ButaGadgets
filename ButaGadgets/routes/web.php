@@ -11,16 +11,16 @@ use App\Http\Controllers\Admin\{
     AdminSpecificationController,
     AdminBannerController
 };
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\OrderController;
 // ==========================================
 // ПУБЛІЧНІ МАРШРУТИ
 // ==========================================
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-// Категорії товарів (можна винести в масив для стислості, якщо їх багато)
-foreach(['phones', 'laptops', 'gaming', 'home', 'householdAppliances'] as $route) {
-    Route::get("/$route", fn() => view("products.$route"))->name($route);
-}
+Route::get('/category/{id}', [App\Http\Controllers\HomeController::class, 'category'])->name('category.show');
+Route::get('/products/{id}', [App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
 
 // Автентифікація
 Route::view('/register', 'auth.register')->name('register');
@@ -29,6 +29,29 @@ Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// CART
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::patch('/cart/update/{item}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{item}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+});
+// Favorite
+Route::middleware('auth')->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/toggle/{product}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+});
+//search
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
+// ORDER
+
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [OrderController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+    Route::get('/orders', [OrderController::class, 'orders'])->name('orders');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+});
 
 // ==========================================
 // ПАНЕЛЬ АДМІНІСТРАТОРА

@@ -1,78 +1,117 @@
 <x-layout>
-<main class="w-4/5 space-y-6">
 
+    {{-- ========== TOP ROW: Sidebar + Hero ========== --}}
+    <div style="display:flex; gap:0; min-height:100vh; background:#f5f5f5">
     
-    <!-- 🔹 HERO -->
-    <section class="grid grid-cols-4 gap-4">
-      <div class="col-span-2 bg-pink-200 rounded-2xl p-6 flex flex-col justify-between">
-        <h2 class="text-3xl font-bold">Забери подарунок </h2>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded-xl w-fit">Отримати</button>
-      </div>
+      {{-- SIDEBAR --}}
+      
     
-      <div class="bg-white p-4 rounded-2xl shadow-sm">
-        <img src="https://www.samsung-online.com.ua/uploads/shop/products/large/76c264d190144ad195a2733a9da1b0c8.jpg" class="mx-auto mb-2">
-        <p class="text-center font-semibold">Samsung S24 Plus</p>
-        <p class="text-center text-green-600">30 900₴</p>
-      </div>
+      {{-- MAIN --}}
+      <main style="flex:1; padding:20px; overflow:hidden">
     
-      <div class="bg-white p-4 rounded-2xl shadow-sm">
-        <img src="https://hdphone.com.ua/image/cache/wp/ij/data/Apple/iPhone_16/apple_iphone_16_img1.webp" class="mx-auto mb-2">
-        <p class="text-center font-semibold">iPhone 16</p>
-        <p class="text-center text-green-600">51 999₴</p>
-      </div>
-    </section>
+        {{-- HERO: banner + 2 featured phones --}}
+        <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; margin-bottom:16px">
     
-    <!-- 🔹 CATEGORIES -->
-    <section class="grid grid-cols-6 gap-4">
-      <div class="bg-white p-4 rounded-xl text-center shadow-sm"><a href="{{route('phones')}}">Смартфони</a></div>
-      <div class="bg-white p-4 rounded-xl text-center shadow-sm"><a href="{{route('laptops')}}">Ноутбуки</a></div>
-      <div class="bg-white p-4 rounded-xl text-center shadow-sm"><a href="{{route('gaming')}}">Геймінг</a></div>
-      <div class="bg-white p-4 rounded-xl text-center shadow-sm"><a href="{{route('householdAppliances')}}">Техніка</a></div>
-      <div class="bg-white p-4 rounded-xl text-center shadow-sm"><a href="{{route('home')}}">Дім</a></div>
-    </section>
+          {{-- Banner --}}
+          @if($banners->isNotEmpty())
+            @php $b = $banners->first() @endphp
+            <div style="background:{{ $b->bg_color ?? '#fce4ec' }};border-radius:12px;padding:28px 24px;display:flex-direction:column;justify-content:flex-end;min-height:180px;position:relative;overflow:hidden">
+              @if($b->image)
+                <img src="{{ asset('storage/'.$b->image) }}" style="position:absolute;right:0;top:0;height:100%;object-fit:cover;opacity:.18">
+              @endif
+              <h2 style="font-size:20px;font-weight:700;color:{{ $b->text_color ?? '#c2185b' }};margin-bottom:12px;position:relative">
+                {{ $b->title }}
+              </h2>
+              @if($b->button_url)
+                <a href="{{ $b->button_url }}"
+                   style="display:inline-block;background:#2ECC71;color:#fff;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:500;text-decoration:none;width:fit-content;position:relative">
+                  {{ $b->button_text ?? 'Отримати' }}
+                </a>
+              @endif
+            </div>
+          @endif
     
-    <!-- 🔹 PROMO -->
-    <section class="grid grid-cols-3 gap-4">
-      <div class="bg-green-400 text-white p-6 rounded-2xl">
-        <h3 class="text-2xl font-bold">Пральні машини</h3>
-        <p>Знижки до 50%</p>
-      </div>
+          {{-- 2 featured products --}}
+            @foreach($featuredProducts->take(2) as $fp)
+            <a href="/products/{{ $fp->id }}"
+              style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;align-items:center;border:1px solid #eee;text-decoration:none;transition:box-shadow .15s"
+              onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width:100%;height:120px;background:#f8f8f8;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+                @php $fpImg = $fp->images->first() @endphp
+                @if($fpImg)
+                  <img src="{{ asset('storage/' . $fpImg->image_path) }}" style="max-height:110px;max-width:100%;object-fit:contain">
+                @else
+                  <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#ccc">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                @endif
+              </div>
+              <p style="font-size:12px;font-weight:600;margin-top:10px;text-align:center;color:#222">{{ $fp->name }}</p>
+              <p style="font-size:13px;color:#2ECC71;font-weight:700;margin-top:2px">{{ number_format($fp->price, 0) }}₴</p>
+            </a>
+            @endforeach
     
-      <div class="bg-yellow-300 p-6 rounded-2xl">
-        <h3 class="text-xl font-bold">Чохли</h3>
-        <p>від 139₴</p>
-      </div>
-    
-      <div class="bg-green-500 text-white p-6 rounded-2xl">
-        <h3 class="text-4xl font-bold">Акційні товари</h3>
-      </div>
-    </section>
-    
-    <!-- 🔹 PRODUCTS -->
-    
-    <h2 class="text-2xl font-bold mb-4">Популярні товари</h2>
-  
-    <div class="grid grid-cols-4 gap-4">
-        <div class="bg-white p-4 rounded-xl shadow-sm">
-          <img src="https://cdn.comfy.ua//media/catalog/product/i/m/img_2742.jpg">
-          <p class="mt-2">Товар 1</p>
         </div>
     
-        <div class="bg-white p-4 rounded-xl shadow-sm">
-          <img src="https://scdn.comfy.ua/89fc351a-22e7-41ee-8321-f8a9356ca351/https://cdn.comfy.ua/media/catalog/product/i/m/img_0988_copy.jpg/w_1440">
-          <p class="mt-2">Товар 2</p>
+        {{-- CATEGORY PILLS --}}
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+          @foreach($categories as $cat)
+            <a href="{{ route('category.show', $cat->id) }}"
+              style="padding:7px 18px;border-radius:8px;border:1px solid #ddd;font-size:13px;background:#fff;color:#333;text-decoration:none;white-space:nowrap"
+              onmouseover="this.style.background='#2ECC71';this.style.color='#fff';this.style.borderColor='#2ECC71'"
+              onmouseout="this.style.background='#fff';this.style.color='#333';this.style.borderColor='#ddd'">
+              {{ $cat->name }}
+            </a>
+          @endforeach
         </div>
     
-        <div class="bg-white p-4 rounded-xl shadow-sm">
-          <img src="https://i.allo.ua/media/catalog/product/cache/1/image/710x600/602f0fa2c1f0d1ba5e241f914e856ff9/3/9/391885922_3_4.webp">
-          <p class="mt-2">Товар 3</p>
+        {{-- PROMO BANNERS --}}
+        @if($banners->count() > 1)
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px">
+            @foreach($banners->skip(1) as $promo)
+              <a href="{{ $promo->button_url ?? '#' }}"
+                 style="background:{{ $promo->bg_color ?? '#2ECC71' }};border-radius:12px;padding:16px 20px;text-decoration:none;display:block">
+                <h4 style="color:{{ $promo->text_color ?? '#fff' }};font-size:14px;font-weight:700;margin-bottom:4px">{{ $promo->title }}</h4>
+                @if($promo->subtitle)
+                  <p style="color:{{ $promo->text_color ?? '#fff' }};font-size:12px;opacity:.85">{{ $promo->subtitle }}</p>
+                @endif
+              </a>
+            @endforeach
+          </div>
+        @endif
+    
+        {{-- POPULAR PRODUCTS --}}
+        @if($popularProducts->isNotEmpty())
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#222">Популярні товари</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px">
+            @foreach($popularProducts as $product)
+              @include('partials.product-card', ['product' => $product])
+            @endforeach
+          </div>
+        @endif
+    
+        {{-- ACTION PRODUCTS --}}
+        @if($actionProducts->isNotEmpty())
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#222">Акційні товари</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px">
+            @foreach($actionProducts as $product)
+              @include('partials.product-card', ['product' => $product, 'showOldPrice' => true])
+            @endforeach
+          </div>
+        @endif
+    
+        {{-- ALL PRODUCTS (paginated) --}}
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#222">Всі товари</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px">
+          @foreach($products as $product)
+            @include('partials.product-card', ['product' => $product])
+          @endforeach
         </div>
     
-        <div class="bg-white p-4 rounded-xl shadow-sm">
-          <img src="https://scdn.comfy.ua/89fc351a-22e7-41ee-8321-f8a9356ca351/https://cdn.comfy.ua/media/catalog/product/y/o/yoga_7_2-in-1_14akp10_seashell.jpg/w_1440">
-          <p class="mt-2">Товар 4</p>
-        </div>
-      </div>
-  </x-layout>
-
-  
+        {{ $products->links() }}
+    
+      
+    </div>
+    
+    </x-layout>

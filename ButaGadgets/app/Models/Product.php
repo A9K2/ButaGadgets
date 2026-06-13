@@ -30,4 +30,21 @@ class Product extends Model
     public function images() {
         return $this->hasMany(ProductImage::class);
     }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class);  // або як називається модель
+    }
+
+    public function value()
+    {
+        return $this->belongsTo(AttributeValue::class);  // або як називається модель
+    }
 }

@@ -16,6 +16,6 @@ class Attribute extends Model
     // Додайте цей метод, щоб Laravel знав, що у атрибута є значення
     public function values()
     {
-        return $this->hasMany(AttributeValue::class, 'attribute_id');
+        return $this->hasMany(AttributeValue::class);
     }
 }

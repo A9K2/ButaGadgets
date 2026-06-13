@@ -23,4 +23,8 @@ class AttributeValue extends Model
         return $this->belongsToMany(Product::class, 'product_attribute_value', 'attribute_value_id', 'product_id')
                     ->withPivot('attribute_id'); // Якщо в таблиці є attribute_id
     }
+    public function productAttributeValues()
+    {
+        return $this->hasMany(ProductAttributeValue::class, 'attribute_value_id');
+    }
 }

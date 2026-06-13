@@ -93,4 +93,11 @@
     .card {
         @apply bg-white shadow-lg rounded-md p-6 border border-slate-200;
     }
+    .card {
+        transition: transform 0.2s; 
+    }
+    .card:hover {
+        transform: translateY(-5px); 
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
 }
