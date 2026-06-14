@@ -13,7 +13,6 @@ class Attribute extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // Додайте цей метод, щоб Laravel знав, що у атрибута є значення
     public function values()
     {
         return $this->hasMany(AttributeValue::class);

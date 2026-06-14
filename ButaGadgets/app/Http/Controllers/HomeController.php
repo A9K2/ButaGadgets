@@ -62,7 +62,6 @@ public function category($id)
         $q->where('category_id', $id);
     })->get();
 
-    // 👇 ОЦЕ СЮДИ
     $filterAttributes = \App\Models\Attribute::whereHas('values', function($q) use ($id) {
         $q->whereHas('productAttributeValues', function($pav) use ($id) {
             $pav->whereHas('product', fn($p) => $p->where('category_id', $id));
@@ -76,7 +75,7 @@ public function category($id)
     return view('category', compact(
         'category', 'products', 'categories',
         'brands', 'brandIds', 'priceMin', 'priceMax', 'sort',
-        'filterAttributes', 'attrFilter'  // 👈 змінено
+        'filterAttributes', 'attrFilter' 
     ));
     
     return view('category', compact(

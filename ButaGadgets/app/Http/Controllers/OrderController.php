@@ -51,11 +51,11 @@ class OrderController extends Controller
                 'price'      => $item->product->price,
             ]);
 
-            // Зменшити кількість товару
+           
             $item->product->decrement('quantity', $item->quantity);
         }
 
-        // Очистити кошик
+      
         $cart->items()->delete();
 
         return redirect()->route('orders.show', $order->id)

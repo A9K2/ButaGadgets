@@ -10,7 +10,6 @@
 
             @csrf
 
-            {{-- Username --}}
             <div class="mb-6">
                 <label for="username" class="mb-2 block text-xl">Ім'я</label>
 
@@ -27,7 +26,6 @@
                 @enderror
             </div>
 
-            {{-- Email --}}
             <div class="mb-6">
                 <label for="email" class="mb-2 block text-xl">Email</label>
 
@@ -44,7 +42,6 @@
                 @enderror
             </div>
 
-            {{-- Password --}}
             <div class="mb-6">
                 <label for="password" class="mb-2 block text-xl">Пароль</label>
 
@@ -61,7 +58,6 @@
                 @enderror
             </div>
 
-            {{-- Confirm Password --}}
             <div class="mb-8">
                 <label for="password_confirmation" class="mb-2 block text-xl">Підтвердження паролю</label>
 

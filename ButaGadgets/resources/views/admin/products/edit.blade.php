@@ -2,16 +2,13 @@
 
 @section('content')
 <div class="card p-4 shadow-sm">
-    {{-- ✅ update, не store --}}
     <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        {{-- ✅ category_id з продукту --}}
         <input type="hidden" name="category_id" value="{{ $category->id }}">
 
         <div class="form-group">
             <label>Назва товару</label>
-            {{-- ✅ value з $product --}}
             <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
         </div>
 
@@ -23,7 +20,6 @@
         <label>Назва бренду</label>
         <select name="brand_id" class="form-control" required>
             @foreach($brands as $brand)
-                {{-- ✅ selected поточний бренд --}}
                 <option value="{{ $brand->id }}" {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
                     {{ $brand->name }}
                 </option>
@@ -33,7 +29,6 @@
         <label>Назва підкатегорії</label>
         <select name="subcategory_id" class="form-control" required>
             @foreach($subcategories as $subcategory)
-                {{-- ✅ selected поточна підкатегорія --}}
                 <option value="{{ $subcategory->id }}" {{ $product->subcategory_id == $subcategory->id ? 'selected' : '' }}>
                     {{ $subcategory->name }}
                 </option>
@@ -47,7 +42,6 @@
 
         <div class="form-group mt-2">
             <label>Ціна</label>
-            {{-- ✅ value з $product --}}
             <input type="number" name="price" class="form-control" step="0.01" value="{{ $product->price }}" required>
         </div>
 
@@ -57,8 +51,6 @@
                 @foreach($category->attributes as $attribute)
                 <div class="form-group">
                     <label>{{ $attribute->name }}</label>
-                    
-                    {{-- Використовуємо $currentAttributes для перевірки --}}
                     <select name="attributes[{{ $attribute->id }}]" class="form-control">
                         <option value="">-- Оберіть значення --</option>
                         @foreach($attribute->values as $value)
@@ -77,7 +69,6 @@
     </form>
 </div>
 
-{{-- Зміна категорії --}}
 <div class="mt-4">
     <form action="{{ route('admin.products.edit', $product->id) }}" method="GET">
         <label>Змінити категорію:</label>

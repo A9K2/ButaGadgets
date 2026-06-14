@@ -1,9 +1,8 @@
-{{-- partials/product-card.blade.php --}}
+
 <div style="background:#fff;border-radius:12px;border:1px solid #eee;display:flex;flex-direction:column;transition:box-shadow .15s"
      onmouseover="this.style.boxShadow='0 2px 12px rgba(0,0,0,.08)'"
      onmouseout="this.style.boxShadow='none'">
 
-  {{-- ЗОБРАЖЕННЯ --}}
   <a href="/products/{{ $product->id }}" style="text-decoration:none">
     <div style="height:140px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;padding:8px;border-radius:12px 12px 0 0">
       @php $img = $product->images->first() @endphp
@@ -20,7 +19,6 @@
     </div>
   </a>
 
-  {{-- ІНФО --}}
   <div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;flex:1">
 
     <a href="/products/{{ $product->id }}" style="text-decoration:none">

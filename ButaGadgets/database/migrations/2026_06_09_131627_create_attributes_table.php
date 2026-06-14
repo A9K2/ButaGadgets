@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
         
-        // Прив'язка до категорії (наприклад, "Смартфони")
+        
         $table->foreignId('category_id')->constrained()->onDelete('cascade');
         
-        // Назва атрибута (наприклад, "Процесор", "ОЗУ")
+        
         $table->string('name');
         
         $table->timestamps();

@@ -9,7 +9,6 @@
     
         <div class="flex gap-6">
     
-          {{-- ФОРМА --}}
           <div class="flex-1">
             <form action="{{ route('checkout.store') }}" method="POST">
               @csrf
@@ -56,8 +55,7 @@
               </button>
             </form>
           </div>
-    
-          {{-- ПІДСУМОК --}}
+
           <div class="w-64 flex-shrink-0">
             <div class="bg-white rounded-xl border border-gray-100 p-5">
               <h2 class="font-semibold text-gray-700 mb-4">Ваше замовлення</h2>

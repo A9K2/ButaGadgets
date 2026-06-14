@@ -18,13 +18,11 @@
       @else
     
         <div class="flex gap-6">
-    
-          {{-- СПИСОК ТОВАРІВ --}}
+  
           <div class="flex-1">
             @foreach($items as $item)
               <div class="bg-white rounded-xl border border-gray-100 p-4 mb-3 flex items-center gap-4">
     
-                {{-- Фото --}}
                 <div class="w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
                   @if($item->product->images->isNotEmpty())
                     <img src="{{ asset('storage/' . $item->product->images->first()->image_path) }}"
@@ -38,7 +36,6 @@
                   @endif
                 </div>
     
-                {{-- Назва --}}
                 <div class="flex-1">
                   <a href="/products/{{ $item->product_id }}"
                      class="font-semibold text-sm text-gray-800 hover:text-green-500">
@@ -49,7 +46,6 @@
                   </p>
                 </div>
     
-                {{-- Кількість --}}
                 <form action="{{ route('cart.update', $item->id) }}" method="POST"
                       class="flex items-center gap-2">
                   @csrf @method('PATCH')
@@ -64,12 +60,10 @@
                   </button>
                 </form>
     
-                {{-- Сума --}}
                 <p class="w-24 text-right font-bold text-sm text-gray-700">
                   {{ number_format($item->product->price * $item->quantity, 0) }} грн
                 </p>
     
-                {{-- Видалити --}}
                 <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                   @csrf @method('DELETE')
                   <button type="submit"
@@ -82,7 +76,6 @@
               </div>
             @endforeach
     
-            {{-- Очистити кошик --}}
             <form action="{{ route('cart.clear') }}" method="POST" class="mt-2">
               @csrf @method('DELETE')
               <button type="submit" class="text-sm text-gray-400 hover:text-red-400">
@@ -91,7 +84,6 @@
             </form>
           </div>
     
-          {{-- ПІДСУМОК --}}
           <div class="w-72 flex-shrink-0">
             <div class="bg-white rounded-xl border border-gray-100 p-5 sticky top-4">
               <h2 class="font-bold text-gray-800 mb-4">Підсумок</h2>

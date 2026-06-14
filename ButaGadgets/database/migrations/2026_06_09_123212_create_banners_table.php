@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable(); // Заголовок (напр. "Забери подарунок")
-            $table->string('image');             // Шлях до картинки банера
-            $table->string('url_link')->nullable(); // Куди веде клік (напр. /category/smartphones)
+            $table->string('title')->nullable(); 
+            $table->string('image');             
+            $table->string('url_link')->nullable(); 
             $table->boolean('is_active')->default(true);
-            $table->integer('sort_order')->default(0); // Порядок сортування
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
     }

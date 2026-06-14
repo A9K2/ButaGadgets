@@ -9,7 +9,6 @@ class Product extends Model
 {
     use HasFactory;
 
-    // Вказуємо поля з вашої схеми для масового заповнення
     protected $fillable = [
         'name', 'brand_id', 'category_id', 'subcategory_id', 
         'price', 'old_price', 'quantity', 'description', 
@@ -17,7 +16,7 @@ class Product extends Model
     ];
     
 
-    // Зв'язок з відгуками (корисна штука для AdminReviewController)
+   
     public function reviews()
     {
         return $this->hasMany(Review::class);
@@ -40,11 +39,12 @@ class Product extends Model
     }
     public function attribute()
     {
-        return $this->belongsTo(Attribute::class);  // або як називається модель
+        return $this->belongsTo(Attribute::class); 
     }
 
     public function value()
     {
-        return $this->belongsTo(AttributeValue::class);  // або як називається модель
+        return $this->belongsTo(AttributeValue::class);
     }
+    
 }

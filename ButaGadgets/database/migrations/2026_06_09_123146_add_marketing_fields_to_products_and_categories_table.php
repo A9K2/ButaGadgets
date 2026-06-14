@@ -8,18 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Оновлюємо таблицю товарів
         Schema::table('products', function (Blueprint $table) {
             $table->decimal('old_price', 10, 2)->nullable()->after('price');
             $table->boolean('is_popular')->default(false)->after('quantity');
             $table->boolean('is_action')->default(false)->after('is_popular');
         });
 
-        // Оновлюємо таблицю категорій (для іконок та плашок на головній)
+       
         Schema::table('categories', function (Blueprint $table) {
-            $table->string('icon_class')->nullable()->after('name'); // напр. 'bi-phone', 'bi-laptop'
-            $table->boolean('show_on_homepage')->default(false)->after('icon_class'); // для кольорових плашок
-            $table->string('homepage_color')->nullable()->after('show_on_homepage'); // колір плашки (напр. #28a745)
+            $table->string('icon_class')->nullable()->after('name'); 
+            $table->boolean('show_on_homepage')->default(false)->after('icon_class'); 
+            $table->string('homepage_color')->nullable()->after('show_on_homepage'); 
         });
     }
 

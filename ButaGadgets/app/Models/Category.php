@@ -8,7 +8,7 @@ use App\Models\Product;
 
 class Category extends Model
 {
-    // Додайте це поле, щоб дозволити запис імені категорії
+    
     protected $fillable = ['name'];
 
     public function subcategories()

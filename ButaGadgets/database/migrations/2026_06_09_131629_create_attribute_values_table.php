@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('attribute_values', function (Blueprint $table) {
             $table->id();
         
-        // Зв'язок із таблицею attributes (зверніть увагу на foreignId)
         $table->foreignId('attribute_id')->constrained()->onDelete('cascade'); 
         
-        // Конкретне значення характеристики
-        $table->string('value'); // Сюди піде текст: '1200 об/хв', 'Bluetooth 5.3'
+        $table->string('value'); 
         
         $table->timestamps();
         });

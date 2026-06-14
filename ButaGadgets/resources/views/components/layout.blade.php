@@ -92,7 +92,7 @@
   </div>
 
 </div>
-{{-- BOTPRESS CHATBOT --}}
+
 <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/06/12/18/20260612184028-P6B9L4RC.js" defer></script>
 

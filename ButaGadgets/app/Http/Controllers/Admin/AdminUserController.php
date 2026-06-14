@@ -8,7 +8,6 @@ use App\Models\User;
 
 class AdminUserController extends Controller
 {
-    // Список усіх користувачів
     public function index(Request $request)
     {
         $users = \App\Models\User::query()
@@ -21,7 +20,6 @@ class AdminUserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    // Форма редагування користувача (наприклад, зміна ролі)
     public function edit(User $user)
     {
         return view('admin.users.edit', compact('user'));
@@ -42,10 +40,8 @@ class AdminUserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Дані користувача успішно оновлено!');
     }
 
-    // Видалення користувача
     public function destroy(User $user)
     {
-        // Захисний механізм: адмін не може видалити сам себе
         if (auth()->id() === $user->id) {
             return redirect()->back()->with('error', 'Ви не можете видалити свій власний акаунт!');
         }

@@ -4,7 +4,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2>Замовлення</h2>
 
-  {{-- ПОШУК --}}
   <form method="GET" action="{{ route('admin.comments.index') }}" class="d-flex gap-2">
     <input type="text" name="search" value="{{ $search }}"
            class="form-control form-control-sm" placeholder="Пошук по імені, телефону, ID...">

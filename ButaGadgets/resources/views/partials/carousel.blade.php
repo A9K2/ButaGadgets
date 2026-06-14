@@ -1,4 +1,4 @@
-{{-- resources/views/partials/carousel.blade.php --}}
+
 <div id="promoCarousel" class="carousel slide mb-4 shadow-sm rounded" data-bs-ride="carousel">
     <div class="carousel-inner">
         @foreach($featuredProducts as $index => $product)

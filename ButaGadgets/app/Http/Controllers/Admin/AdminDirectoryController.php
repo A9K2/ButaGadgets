@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class AdminDirectoryController extends Controller
 {
-    // Головна сторінка керування довідниками
+    
     public function index()
     {
         $brands = Brand::with('categories')->latest()->get();
@@ -54,13 +54,11 @@ class AdminDirectoryController extends Controller
         return redirect()->back()->with('success', 'Підкатегорію успішно додано!');
     }
 
-    // ================= МЕТОДИ ДЛЯ ВИДАЛЕННЯ =================
-
     public function destroyBrand($id)
     {
         $brand = Brand::findOrFail($id);
         
-        // Перевірка: чи є товари у цього бренду
+        
         if ($brand->products()->exists()) {
             return redirect()->back()->with('error', 'Не можна видалити бренд, оскільки до нього прив\'язані товари!');
         }
@@ -86,8 +84,6 @@ class AdminDirectoryController extends Controller
     public function destroySubcategory($id)
     {
         $subcategory = Subcategory::findOrFail($id);
-    
-        // якщо є перевірка на товари — теж замініть back() на route()
         $subcategory->delete();
         return redirect()->route('admin.directories.index')
             ->with('success', 'Підкатегорію успішно видалено.');

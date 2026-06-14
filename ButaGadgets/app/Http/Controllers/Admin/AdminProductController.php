@@ -8,8 +8,6 @@ use App\Models\Product;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Subcategory;
-use App\Models\Phone;
-use App\Models\Laptop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +17,7 @@ class AdminProductController extends Controller
     {
         $query = \App\Models\Product::query();
 
-        // Пошук за назвою
+        
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
@@ -28,13 +26,13 @@ class AdminProductController extends Controller
         return view('admin.products.index', compact('products'));
     }
 
-    // У AdminProductController.php
+    
     public function create(Request $request)
     {
         $categories    = Category::all();
         $subcategories = Subcategory::all();
         $category      = null;
-        $brands        = collect(); // порожня колекція за замовчуванням
+        $brands        = collect(); 
 
         if ($request->has('category_id')) {
             $category      = Category::with('attributes.values', 'brands')->find($request->category_id);
@@ -83,10 +81,6 @@ class AdminProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Товар додано!');
     }
 
-    /**
-     * МЕТОД ЕDIT: Відображення форми редагування
-     */
-    // У AdminProductController.php
     public function edit(Request $request, $id)
 {
     $product       = Product::with('attributeValues')->findOrFail($id);
@@ -96,7 +90,6 @@ class AdminProductController extends Controller
     $brands        = $category ? $category->brands : Brand::all();
     $subcategories = Subcategory::where('category_id', $categoryId)->get();
 
-    // ✅ Будуємо масив [attribute_id => value_id] з поточних значень продукту
     $currentAttributes = [];
     foreach ($product->attributeValues as $av) {
         $currentAttributes[$av->attribute_id] = $av->attribute_value_id;
@@ -107,9 +100,7 @@ class AdminProductController extends Controller
     ));
 }
 
-    /**
-     * МЕТОД UPDATE: Оновлення даних у базі даних
-     */
+
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -149,10 +140,6 @@ class AdminProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Товар оновлено!');
     }
-
-        
-    
-
     public function destroy(Product $product)
     {
         $product->delete();

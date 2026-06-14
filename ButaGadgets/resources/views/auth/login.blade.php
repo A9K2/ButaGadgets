@@ -9,8 +9,6 @@
         <form action="{{route('login')}}" method="POST">
 
             @csrf
-
-            {{-- Email --}}
             <div class="mb-6">
                 <label for="email" class="mb-2 block text-xl">Email</label>
 
@@ -26,8 +24,6 @@
                     <p class="error">{{$message}}</p>
                 @enderror
             </div>
-
-            {{-- Password --}}
             <div class="mb-6">
                 <label for="password" class="mb-2 block text-xl">Пароль</label>
 

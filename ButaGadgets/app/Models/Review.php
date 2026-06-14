@@ -17,13 +17,11 @@ class Review extends Model
         'is_visible',
     ];
 
-    // Відгук належить користувачу
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Відгук належить товару
     public function product()
     {
         return $this->belongsTo(Product::class);

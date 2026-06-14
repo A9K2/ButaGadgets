@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
 use App\Http\Controllers\Controller;
-use App\Models\Subcategory;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use Illuminate\Http\Request;
@@ -18,14 +17,12 @@ class AdminSpecificationController extends Controller
     return view('admin.specifications.index', compact('categories'));
 }
 
-    // app/Http/Controllers/Admin/AdminSpecificationController.php
-
     public function storeAttribute(Request $request, $id) 
     {
         $request->validate(['name' => 'required|string|max:255']);
     
         \App\Models\Attribute::create([
-            'category_id' => $id, // ЦЕ ОБОВ'ЯЗКОВО!
+            'category_id' => $id, 
             'name' => $request->name
         ]);
         
@@ -46,7 +43,6 @@ class AdminSpecificationController extends Controller
 
     public function destroy($id)
     {
-        // Це видалить характеристику (і всі її значення, якщо у вас каскадне видалення)
         Attribute::findOrFail($id)->delete();
         return back()->with('success', 'Характеристику видалено!');
     }

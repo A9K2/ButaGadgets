@@ -1,7 +1,7 @@
 <x-layout>
     <div class="w-full">
     
-      {{-- ХЛІБНІ КРИХТИ --}}
+     
       <div class="text-sm mb-4">
         <a href="/" class="text-green-500">Головна</a>
         <span class="text-gray-400 mx-1">/</span>
@@ -10,12 +10,12 @@
         <span class="text-gray-600">{{ $product->name }}</span>
       </div>
     
-      {{-- ОСНОВНИЙ БЛОК --}}
+   
       <div class="bg-white rounded-xl border border-gray-100 p-6 mb-6 flex gap-8">
     
-        {{-- ГАЛЕРЕЯ --}}
+       
         <div class="w-96 flex-shrink-0">
-          {{-- Головне фото --}}
+         
           <div class="bg-gray-50 rounded-xl flex items-center justify-center mb-3" style="height:320px">
             @if($product->images->isNotEmpty())
               <img id="main-image"
@@ -30,7 +30,7 @@
             @endif
           </div>
     
-          {{-- Мініатюри --}}
+         
           @if($product->images->count() > 1)
             <div class="flex gap-2 flex-wrap">
               @foreach($product->images as $img)
@@ -45,12 +45,12 @@
           @endif
         </div>
     
-        {{-- ІНФО --}}
+       
         <div class="flex-1">
           <p class="text-sm text-gray-400 mb-1">{{ $product->brand->name ?? '' }}</p>
           <h1 class="text-xl font-bold text-gray-800 mb-3">{{ $product->name }}</h1>
     
-          {{-- ЦІНА --}}
+         
           <div class="mb-4">
             @if($product->old_price)
               <p class="text-sm text-gray-400 line-through">{{ number_format($product->old_price, 0) }} грн</p>
@@ -58,7 +58,6 @@
             <p class="text-3xl font-bold text-green-500">{{ number_format($product->price, 0) }} грн</p>
           </div>
     
-          {{-- НАЯВНІСТЬ --}}
           <p class="text-sm mb-4">
             @if($product->quantity > 0)
               <span class="text-green-500 font-medium">✓ В наявності</span>
@@ -68,7 +67,7 @@
             @endif
           </p>
     
-          {{-- КНОПКИ --}}
+
           <div class="flex gap-3 mb-6">
             @auth
               <form action="{{ route('cart.add', $product->id) }}" method="POST">
@@ -99,7 +98,6 @@
             @endauth
           </div>
     
-          {{-- ХАРАКТЕРИСТИКИ --}}
           @if($product->attributeValues->isNotEmpty())
             <div class="border-t border-gray-100 pt-4">
               <h3 class="font-semibold text-gray-700 mb-3">Характеристики</h3>
@@ -117,7 +115,6 @@
     
       </div>
     
-      {{-- ОПИС --}}
       @if($product->description)
         <div class="bg-white rounded-xl border border-gray-100 p-6 mb-6">
           <h2 class="font-bold text-gray-800 mb-3">Опис</h2>
@@ -125,7 +122,6 @@
         </div>
       @endif
     
-      {{-- СХОЖІ ТОВАРИ --}}
       @if($related->isNotEmpty())
         <div>
           <h2 class="font-bold text-gray-800 mb-4">Схожі товари</h2>

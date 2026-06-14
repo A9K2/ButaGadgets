@@ -3,7 +3,6 @@
 
   <form method="GET" action="{{ route('category.show', request()->route('id')) }}">
 
-    {{-- ЦІНА --}}
     <div class="mb-3 border-b pb-3">
       <button type="button" onclick="toggle('filter-price')"
               class="flex items-center justify-between w-full font-semibold text-sm py-1">
@@ -17,7 +16,6 @@
       </div>
     </div>
 
-    {{-- БРЕНДИ --}}
     @if(!empty($brands) && count($brands) > 0)
       <div class="mb-3 border-b pb-3">
         <button type="button" onclick="toggle('filter-brands')"
@@ -37,7 +35,6 @@
       </div>
     @endif
 
-    {{-- ХАРАКТЕРИСТИКИ --}}
     @if(!empty($filterAttributes) && count($filterAttributes) > 0)
       @foreach($filterAttributes as $attr)
         <div class="mb-3 border-b pb-3">
@@ -94,7 +91,6 @@
 
   </form>
 
-  {{-- КАТЕГОРІЇ --}}
   <div class="border-t pt-4">
     <p class="font-semibold mb-2 text-sm">Категорії</p>
     @foreach(\App\Models\Category::all() as $cat)
@@ -113,13 +109,11 @@ function toggle(id) {
   const isHidden = el.classList.contains('hidden');
   el.classList.toggle('hidden');
 
-  // Повертаємо іконку
   const iconId = id.replace('filter-', 'icon-');
   const icon = document.getElementById(iconId);
   if (icon) icon.textContent = isHidden ? '▲' : '▼';
 }
 
-// Автоматично розкрити якщо є активні фільтри
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('input[type=checkbox]:checked, input[type=radio]:not([value=newest]):checked')
     .forEach(function(input) {

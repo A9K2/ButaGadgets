@@ -1,18 +1,11 @@
 <x-layout>
 
-    {{-- ========== TOP ROW: Sidebar + Hero ========== --}}
     <div style="display:flex; gap:0; min-height:100vh; background:#f5f5f5">
     
-      {{-- SIDEBAR --}}
-      
-    
-      {{-- MAIN --}}
       <main style="flex:1; padding:20px; overflow:hidden">
-    
-        {{-- HERO: banner + 2 featured phones --}}
+
         <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; margin-bottom:16px">
     
-          {{-- Banner --}}
           @if($banners->isNotEmpty())
             @php $b = $banners->first() @endphp
             <div style="background:{{ $b->bg_color ?? '#fce4ec' }};border-radius:12px;padding:28px 24px;display:flex-direction:column;justify-content:flex-end;min-height:180px;position:relative;overflow:hidden">
@@ -30,8 +23,7 @@
               @endif
             </div>
           @endif
-    
-          {{-- 2 featured products --}}
+
             @foreach($featuredProducts->take(2) as $fp)
             <a href="/products/{{ $fp->id }}"
               style="background:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;align-items:center;border:1px solid #eee;text-decoration:none;transition:box-shadow .15s"
@@ -53,8 +45,7 @@
             @endforeach
     
         </div>
-    
-        {{-- CATEGORY PILLS --}}
+
         <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
           @foreach($categories as $cat)
             <a href="{{ route('category.show', $cat->id) }}"
@@ -66,7 +57,6 @@
           @endforeach
         </div>
     
-        {{-- PROMO BANNERS --}}
         @if($banners->count() > 1)
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px">
             @foreach($banners->skip(1) as $promo)
@@ -81,7 +71,6 @@
           </div>
         @endif
     
-        {{-- POPULAR PRODUCTS --}}
         @if($popularProducts->isNotEmpty())
           <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#222">Популярні товари</h3>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px">
@@ -90,8 +79,7 @@
             @endforeach
           </div>
         @endif
-    
-        {{-- ACTION PRODUCTS --}}
+
         @if($actionProducts->isNotEmpty())
           <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#222">Акційні товари</h3>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:28px">
@@ -101,7 +89,6 @@
           </div>
         @endif
     
-        {{-- ALL PRODUCTS (paginated) --}}
         <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#222">Всі товари</h3>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px">
           @foreach($products as $product)
